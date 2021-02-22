@@ -1,0 +1,58 @@
+﻿Category,Sub-category,Primary Descriptors,Secondary descriptors,Multiplier,Modifier,Divergence Angle
+Person in water,Float position Unknown,,,0.011,0.07,30
+Person in water,Vertical,,,0.005,0.07,18
+Person in water,Sitting,,,0.012,0,18
+Person in water,Horizontal,Survival Suit,,0.014,0.1,30
+Person in water,Horizontal,Scuba Suit,,0.007,0.08,30
+Person in water,Horizontal,Deceased,,0.015,0.08,30
+Survival Craft,Maritime life rafts,No ballast systems,Canopy/drogue unknown,0.042,0.03,28
+Survival Craft,Maritime life rafts,No ballast systems,No canopy and no drogue,0.057,0.21,24
+Survival Craft,Maritime life rafts,No ballast systems,No canopy but has drogue,0.044,-0.2,28
+Survival Craft,Maritime life rafts,No ballast systems,Canopy but no drogue,0.037,0.11,24
+Survival Craft,Maritime life rafts,No ballast systems,Canopy with drogue,0.03,0,28
+Survival Craft,Maritime life rafts,Shallow ballast systems and canopy,drogue unknown,0.029,0,22
+Survival Craft,Maritime life rafts,Shallow ballast systems and canopy,No drogue,0.032,-0.2,22
+Survival Craft,Maritime life rafts,Shallow ballast systems and canopy,With drogue,0.025,0.01,22
+Survival Craft,Maritime life rafts,Shallow ballast systems and canopy,Capsized,0.017,-0.1,8
+Survival Craft,Maritime life rafts,Deep ballast systems and canopies,Capacity and drogue unknown,0.03,0.02,13
+Survival Craft,Maritime life rafts,Deep ballast systems and canopies,4 - 6 person capacity and drogue unknown,0.029,0.04,15
+Survival Craft,Maritime life rafts,Deep ballast systems and canopies,4 - 6 person capacity without drogue - loading unknown,0.038,-0.04,15
+Survival Craft,Maritime life rafts,Deep ballast systems and canopies,4 - 6 person capacity without drogue - light loading,0.038,-0.04,15
+Survival Craft,Maritime life rafts,Deep ballast systems and canopies,4 - 6 person capacity without drogue - heavy loading,0.036,-0.03,15
+Survival Craft,Maritime life rafts,Deep ballast systems and canopies,4 - 6 person capacity with drogue - loading unknown,0.018,0.03,12
+Survival Craft,Maritime life rafts,Deep ballast systems and canopies,4 - 6 person capacity with drogue - light loading,0.016,0.05,24
+Survival Craft,Maritime life rafts,Deep ballast systems and canopies,4 - 6 person capacity with drogue - heavy loading,0.021,0,20
+Survival Craft,Maritime life rafts,Deep ballast systems and canopies,15-25 person capacity - drogue unknown,0.036,-0.09,10
+Survival Craft,Maritime life rafts,Deep ballast systems and canopies,15-25 person capacity without drogue - light loading,0.039,-0.06,9
+Survival Craft,Maritime life rafts,Deep ballast systems and canopies,15-25 person capacity with drogue - heavy loading,0.031,-0.07,12.9
+Survival Craft,Maritime life rafts,Deep ballast systems and canopies,Capsized,0.009,0,16.12
+Survival Craft,Maritime life rafts,Deep ballast systems and canopies,Swamped,0.01,-0.04,11.8
+Survival Craft,Other Maritime Survival Craft,Life capsule,,0.038,-0.08,22
+Survival Craft,Other Maritime Survival Craft,USCG Sea Rescue kit,,0.025,-0.04,7
+Survival Craft,Aviation Life Rafts,No ballast but has canopy,4-6 person without drogue,0.037,0.11,24
+Survival Craft,Aviation Life Rafts,Evac/Slide,4-6 person ,0.028,-0.01,15
+Person-powered Craft,Sea Kayak,With person on aft deck,,0.011,0.024,15
+Person-powered Craft,Surfboard,With person,,0.02,0,15
+Person-powered Craft,Windsurfer,With person and mast,and sail in water,0.023,0.1,12
+Sailing Vessels,Mono-hull,Full Keel,Deep Draft,0.03,0,48
+Sailing Vessels,Mono-hull,Fin Keel,Shoal Draft,0.04,0,48
+Power Vessels,Skiffs,Flat Bottom,Boston Whaler,0.034,0.04,22
+Power Vessels,Skiffs,V-hull,Standard Config,0.03,0.08,15
+Power Vessels,Skiffs,V-hull,Swamped,0.017,0,15
+Power Vessels,Sport Boats,Cuddy Cabin,Modified V-hull,0.069,-0.08,19
+Power Vessels,Sport Fisher,Center Console,Open Cockpit,0.06,-0.09,22
+Power Vessels,Commercial Fishing Vessels,Type Unknown,,0.037,0.02,48
+Power Vessels,Commercial Fishing Vessels,Sampans,,0.04,0,48
+Power Vessels,Commercial Fishing Vessels,Side-stern Trawler,,0.042,0,48
+Power Vessels,Commercial Fishing Vessels,Longliners,,0.037,0,48
+Power Vessels,Commercial Fishing Vessels,Junk,,0.027,0.1,48
+Power Vessels,Commercial Fishing Vessels,Gill-netter,With rear reel,0.04,0.01,33
+Power Vessels,Coastal Freighter,,,0.028,0,48
+Boating Debris,F/V Debris,,,0.02,0,10
+Boating Debris,Bait/Wharf Box (holds 1 cubic metre of ice),Unknown contents,,0.013,0.27,31
+Boating Debris,Bait/Wharf Box (holds 1 cubic metre of ice),Lightly loaded,,0.026,0.018,15
+Boating Debris,Bait/Wharf Box (holds 1 cubic metre of ice),Fully loaded,,0.016,0.016,33
+Miscellaneous SAR objects,Immigration Vessel,Cuban Refugee Raft,Without Sail,0.015,0.17,17
+Miscellaneous SAR objects,Immigration Vessel,Cuban Refugee Raft,With Sail,0.079,-0.17,33
+Miscellaneous SAR objects,Sewage Floatables,Tampon Applicators,,0.018,0,5
+Miscellaneous SAR objects,Medical Waste,Vials and Syringes,,0.028,0,10

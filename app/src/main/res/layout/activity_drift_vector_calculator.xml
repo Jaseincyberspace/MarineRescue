@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1F3280"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
+    tools:context=".DriftVectorCalculator">
+
+    <EditText
+        android:id="@+id/ET_windSpeed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:hint="0"
+        android:inputType="number|numberDecimal"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:nextFocusDown="@+id/SP_windDirection"
+        app:layout_constraintEnd_toStartOf="@+id/TV_windKts"
+        app:layout_constraintStart_toEndOf="@+id/TV_windSpeed"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorButton"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ET_elapsedTimeHrs"
+        app:layout_constraintVertical_bias="1.0">
+
+    </LinearLayout>
+
+    <Spinner
+        android:id="@+id/SP_category"
+        style="@style/Widget.AppCompat.Spinner.Underlined"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:nextFocusDown="@+id/SP_subCategory"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/TV_category"
+        app:layout_constraintTop_toBottomOf="@+id/TV_category" />
+
+    <Spinner
+        android:id="@+id/SP_subCategory"
+        style="@style/Widget.AppCompat.Spinner.Underlined"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:nextFocusDown="@+id/SP_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/TV_subCategory"
+        app:layout_constraintTop_toBottomOf="@+id/TV_subCategory" />
+
+    <Spinner
+        android:id="@+id/SP_description"
+        style="@style/Widget.AppCompat.Spinner.Underlined"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:nextFocusDown="@+id/SP_secondaryDescription"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/TV_description"
+        app:layout_constraintTop_toBottomOf="@+id/TV_description" />
+
+    <Spinner
+        android:id="@+id/SP_secondaryDescription"
+        style="@style/Widget.AppCompat.Spinner.Underlined"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:nextFocusDown="@+id/B_calculateDriftVector"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/TV_secondaryDescription"
+        app:layout_constraintTop_toBottomOf="@+id/TV_secondaryDescription" />
+
+    <TextView
+        android:id="@+id/TV_windSpeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="@string/wind"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/ET_windSpeed"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/TV_windKts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="@string/kts"
+        android:textColor="#FF5722"
+        android:textSize="18sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/ET_windSpeed"
+        app:layout_constraintEnd_toStartOf="@+id/TV_windDirection"
+        app:layout_constraintStart_toEndOf="@+id/ET_windSpeed" />
+
+    <TextView
+        android:id="@+id/TV_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/category"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ET_elapsedTimeHrs" />
+
+    <TextView
+        android:id="@+id/TV_subCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/sub_category"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SP_category" />
+
+    <TextView
+        android:id="@+id/TV_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/description"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SP_subCategory" />
+
+    <TextView
+        android:id="@+id/TV_secondaryDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/secondary_description"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SP_description" />
+
+    <Button
+        android:id="@+id/B_calculateDriftVector"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="24dp"
+        android:background="#1F3280"
+        android:text="@string/calculate_drift_vector"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SP_secondaryDescription" />
+
+    <TextView
+        android:id="@+id/TV_elapsedTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="@string/elapsed_time"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/ET_elapsedTimeHrs"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/ET_elapsedTimeHrs"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:hint="00"
+        android:inputType="number"
+        android:maxLength="2"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:nextFocusDown="@+id/ET_elapsedTimeMins"
+        app:layout_constraintEnd_toStartOf="@+id/TV_hrs"
+        app:layout_constraintStart_toEndOf="@+id/TV_elapsedTime"
+        app:layout_constraintTop_toBottomOf="@+id/ET_currentSpeed" />
+
+    <TextView
+        android:id="@+id/TV_hrs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hrs"
+        android:textColor="#FF5722"
+        android:textSize="18sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/ET_elapsedTimeHrs"
+        app:layout_constraintEnd_toStartOf="@+id/ET_elapsedTimeMins"
+        app:layout_constraintStart_toEndOf="@+id/ET_elapsedTimeHrs" />
+
+    <EditText
+        android:id="@+id/ET_elapsedTimeMins"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="00"
+        android:inputType="number"
+        android:maxLength="2"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:nextFocusDown="@+id/SP_category"
+        app:layout_constraintBaseline_toBaselineOf="@+id/TV_hrs"
+        app:layout_constraintEnd_toStartOf="@+id/TV_mins"
+        app:layout_constraintStart_toEndOf="@+id/TV_hrs" />
+
+    <TextView
+        android:id="@+id/TV_mins"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:text="@string/min"
+        android:textColor="#FF5722"
+        android:textSize="18sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/ET_elapsedTimeMins"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ET_elapsedTimeMins" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/SP_windDirection"
+        app:layout_constraintEnd_toEndOf="@+id/SP_windDirection"
+        app:layout_constraintStart_toStartOf="@+id/SP_windDirection"
+        app:layout_constraintTop_toTopOf="@+id/SP_windDirection"></LinearLayout>
+
+    <Spinner
+        android:id="@+id/SP_windDirection"
+        style="@style/Widget.AppCompat.Spinner.Underlined"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="24dp"
+        android:nextFocusDown="@+id/ET_currentSpeed"
+        app:layout_constraintBottom_toBottomOf="@+id/TV_windKts"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/TV_windDirection"
+        app:layout_constraintTop_toTopOf="@+id/TV_windKts" />
+
+    <TextView
+        android:id="@+id/TV_windDirection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/from"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/TV_windKts"
+        app:layout_constraintEnd_toStartOf="@+id/SP_windDirection"
+        app:layout_constraintStart_toEndOf="@+id/TV_windKts" />
+
+    <TextView
+        android:id="@+id/textView21"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="@string/current"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/ET_currentSpeed"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/at"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/TV_currentKts"
+        app:layout_constraintEnd_toStartOf="@+id/ET_currentDirection"
+        app:layout_constraintStart_toEndOf="@+id/TV_currentKts" />
+
+    <TextView
+        android:id="@+id/textView23"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:text="@string/deg_t"
+        android:textColor="#FF5722"
+        android:textSize="18sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/ET_currentDirection"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/TV_currentKts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="@string/kts"
+        android:textColor="#FF5722"
+        android:textSize="18sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/ET_currentSpeed"
+        app:layout_constraintEnd_toStartOf="@+id/textView22"
+        app:layout_constraintStart_toEndOf="@+id/ET_currentSpeed" />
+
+    <EditText
+        android:id="@+id/ET_currentSpeed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:hint="0"
+        android:inputType="number|numberDecimal"
+        android:maxLength="4"
+        android:nextFocusDown="@+id/ET_currentDirection"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toStartOf="@+id/TV_currentKts"
+        app:layout_constraintStart_toEndOf="@+id/textView21"
+        app:layout_constraintTop_toBottomOf="@+id/ET_windSpeed" />
+
+    <EditText
+        android:id="@+id/ET_currentDirection"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="000.0"
+        android:inputType="number|numberDecimal"
+        android:maxLength="5"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:nextFocusDown="@+id/ET_elapsedTimeHrs"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textView22"
+        app:layout_constraintEnd_toStartOf="@+id/textView23"
+        app:layout_constraintStart_toEndOf="@+id/textView22" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
