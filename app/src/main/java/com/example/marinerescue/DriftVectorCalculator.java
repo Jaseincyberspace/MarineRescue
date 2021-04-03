@@ -158,192 +158,211 @@ public class DriftVectorCalculator extends AppCompatActivity implements AdapterV
         B_calculateDriftVector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                // If any of these fields are not updated by the user then the value stays at -1 and it will fail validation.
-                double windSpeed = -1;
-                double windVectorAngle = -1;
-                double currentSpeed = -1;
-                double currentVectorAngle = -1;
-                double decimalHours = -1;
-
-                // Set vars for the type of drift object selected by the user. (Defaults to 'Person In Water)
-                DriftObjectLeeway driftObject = driftObjectLeewayDatabase.driftObjectLeewayDao().getDriftObjectLeeway(category, subCategory, primaryDescriptor, secondaryDescriptor);
-                double speedMultiplier = driftObject.getSpeedMultiplier();
-                double speedModifier = driftObject.getSpeedModifier();
-                double divergenceAngle = driftObject.getDivergenceAngle();
-                double leeway = 0;
-
-                // VALIDATE USER INPUT:
-                // Wind direction is a spinner so there is no invalid value possible.
-                // Wind angle has 180 degrees either added to or subtracted from it to make it the angle the wind is blowing 'to' rather than blowing 'from'
-                switch (windDirection) {
-                    case "N":
-                        windVectorAngle = 0 + 180;
-                        break;
-                    case "NNE":
-                        windVectorAngle = 22.5 + 180;
-                        break;
-                    case "NE":
-                        windVectorAngle = 45 + 180;
-                        break;
-                    case "ENE":
-                        windVectorAngle = 67.5 + 180;
-                        break;
-                    case "E":
-                        windVectorAngle = 90 + 180;
-                        break;
-                    case "ESE":
-                        windVectorAngle = 112.5 + 180;
-                        break;
-                    case "SE":
-                        windVectorAngle = 135 + 180;
-                        break;
-                    case "SSE":
-                        windVectorAngle = 157.5 + 180;
-                        break;
-                    case "S":
-                        windVectorAngle = 180 + 180;
-                        break;
-                    case "SSW":
-                        windVectorAngle = 202.5 - 180;
-                        break;
-                    case "SW":
-                        windVectorAngle = 225 - 180;
-                        break;
-                    case "WSW":
-                        windVectorAngle = 247.5 - 180;
-                        break;
-                    case "W":
-                        windVectorAngle = 270 - 180;
-                        break;
-                    case "WNW":
-                        windVectorAngle = 292.5 - 180;
-                        break;
-                    case "NW":
-                        windVectorAngle = 315 - 180;
-                        break;
-                    case "NNW":
-                        windVectorAngle = 337.5 - 180;
-                        break;
-                }// End switch
-
-
-                try {
-                    windSpeed = Double.parseDouble(ET_windSpeed.getText().toString());
-                    leeway = ((windSpeed * speedMultiplier) + speedModifier);
-                } catch (NumberFormatException e) {
-                    Log.w(TAG, "Wind speed value is invalid");
-                }
-                try {
-                    currentSpeed = Double.parseDouble(ET_currentSpeed.getText().toString());
-                }
-                catch (NumberFormatException e) {
-                    Log.w(TAG, "Current speed value is invalid");
-                }
-                try {
-                    currentVectorAngle = Double.parseDouble(ET_currentDirection.getText().toString());
-                }
-                catch (NumberFormatException e) {
-                    Log.w(TAG, "Current direction value is invalid");
-                }
-                try {
-                    /* Formula to convert elapsed time to decimal hours:
-                     * decimalHours = (hours) + (minutes / 60)
-                     * e.g. (1 hour 45 minutes) = 1 + (45/60)
-                     */
-                    decimalHours = Double.parseDouble(ET_elapsedTimeHrs.getText().toString()) + ((Double.parseDouble(ET_elapsedTimeMins.getText().toString()) / 60));
-                }
-                catch (NumberFormatException e) {
-                    Log.w(TAG, "Elapsed time value is invalid");
-                }
-                if(windSpeed == -1) {
-                    Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.please_enter_a_wind_speed), Toast.LENGTH_LONG);
-                    toast.show();
-                }
-                else if(currentSpeed == -1) {
-                    Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.please_enter_current_speed), Toast.LENGTH_LONG);
-                    toast.show();
-                }
-                else if(currentVectorAngle == -1) {
-                    Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.please_enter_current_direction), Toast.LENGTH_LONG);
-                    toast.show();
-                }
-                else if(decimalHours == -1) {
-                    Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.please_enter_elapsed_time), Toast.LENGTH_LONG);
-                    toast.show();
-                }
-                else {
-                    // If it gets to here it has passed validation so a total drift vector is calculated and composed into a string...
-
-                    // CALCULATIONS:
-                    // Set magnitude and angle for each of the two vectors
-                    double windVectorMagnitude = (windSpeed + leeway) * decimalHours;
-                    windVectorAngle = windVectorAngle;
-
-                    double currentVectorMagnitude = currentSpeed * decimalHours;
-                    currentVectorAngle = currentVectorAngle;
-
-                    // Convert to cartesian points
-                    double windVector_X = windVectorMagnitude * Math.cos(windVectorAngle * Math.PI/180);
-                    double currentVector_X = currentVectorMagnitude * Math.cos(currentVectorAngle * Math.PI/180);
-                    double windVector_Y = windVectorMagnitude * Math.sin(windVectorAngle * Math.PI/180);
-                    double currentVector_Y = currentVectorMagnitude * Math.sin(currentVectorAngle * Math.PI/180);
-
-                    // Add components together to find the sum of the vectors in cartesian form
-                    double totalVector_X = windVector_X + currentVector_X;
-                    double totalVector_Y = windVector_Y + currentVector_Y;
-
-                    // Convert the resultant vector back to polar form. This is the Total Drift Vector (TDV)
-                    double TDV_Magnitude = Math.sqrt(Math.pow(totalVector_X, 2) + Math.pow(totalVector_Y, 2));
-                    double TDV_Angle = Math.atan2(totalVector_Y, totalVector_X);
-                    TDV_Angle = TDV_Angle * (180/Math.PI);
-
-                    // Deal with negative values
-                    if(TDV_Angle < 0) {
-                        TDV_Angle = TDV_Angle + 360;
-                    }
-
-                    // Calculate the size of the search area (Radius (in nautical miles) with it's centre point at the end of the TDV)
-                    double searchArea = 0;
-                    // if the total drift vector is less than 8 nautical miles then the search area is a circle with a radius of 6 nautical miles.
-                    if(TDV_Magnitude < 8) {
-                        searchArea = 6;
-                    }
-                    // if the total drift vector is greater than 8 nautical miles then the search area is a circle with a radius of: (TDV_magnitude/8) + 6 nautical miles.
-                    else {
-                        searchArea = (TDV_Magnitude/8) + 6;
-                    }
-
-                    // Generate strings that will be displayed in a dialog box with the Display Total Drift Vector (TDV) and the input factors that were used to calculate it.
-                    // TDV_Magnitude = Math.round(TDV_Magnitude);
-                    DecimalFormat formatter = new DecimalFormat("#.##");
-                    String formattedTDVMagnitude = formatter.format(TDV_Magnitude);
-                    String formattedTDVAngle = formatter.format(TDV_Angle);
-                    String formattedLeeway = formatter.format(leeway);
-                    String formattedSearchArea = formatter.format(searchArea);
-
-                    String driftObjectCharacteristics;
-                    if(primaryDescriptor.contentEquals("N/A")) {
-                        driftObjectCharacteristics = category + ", " + subCategory;
-                    }
-                    else if(secondaryDescriptor.contentEquals("N/A")) {
-                        driftObjectCharacteristics = category + ", " + subCategory + ", " + primaryDescriptor;
-                    }
-                    else {
-                        driftObjectCharacteristics = category + ", " + subCategory + ", " + primaryDescriptor + ", " + secondaryDescriptor;
-                    }
-
-                    String elapsedTimeHrs = ET_elapsedTimeHrs.getText().toString();
-                    String elapsedTimeMins = ET_elapsedTimeMins.getText().toString();
-
-                    // Display the dialog box
-                    dialogBoxDisplayDriftVector(formattedTDVMagnitude, formattedTDVAngle, String.valueOf(divergenceAngle), formattedSearchArea, driftObjectCharacteristics, String.valueOf(windSpeed),
-                            windDirection, String.valueOf(currentSpeed), String.valueOf(currentVectorAngle), formattedLeeway, elapsedTimeHrs, elapsedTimeMins);
-                }
+                calculateTotalDriftVector();
             }
         });// End onClick method
 
     }// End onCreate method
+
+    // Calculate total drift vector, search area radius and divergence angle
+    public String calculateTotalDriftVector() {
+        // Find views
+        final EditText ET_windSpeed = findViewById(R.id.ET_windSpeed);
+        final Spinner SP_windDirection = (Spinner) findViewById(R.id.SP_windDirection);
+        final EditText ET_currentSpeed = findViewById(R.id.ET_currentSpeed);
+        final EditText ET_currentDirection = findViewById(R.id.ET_currentDirection);
+        final EditText ET_elapsedTimeHrs = findViewById(R.id.ET_elapsedTimeHrs);
+        final EditText ET_elapsedTimeMins = findViewById(R.id.ET_elapsedTimeMins);
+        final Spinner SP_category = (Spinner) findViewById(R.id.SP_category);
+        final Spinner SP_subCategory = (Spinner) findViewById(R.id.SP_subCategory);
+        final Spinner SP_description = (Spinner) findViewById(R.id.SP_description);
+        final Spinner SP_secondaryDescription = (Spinner) findViewById(R.id.SP_secondaryDescription);
+
+        // If any of these fields are not updated by the user then the value stays at -1 and it will fail validation.
+        double windSpeed = -1;
+        double windVectorAngle = -1;
+        double currentSpeed = -1;
+        double currentVectorAngle = -1;
+        double decimalHours = -1;
+
+        // Set vars for the type of drift object selected by the user. (Defaults to 'Person In Water)
+        DriftObjectLeeway driftObject = driftObjectLeewayDatabase.driftObjectLeewayDao().getDriftObjectLeeway(category, subCategory, primaryDescriptor, secondaryDescriptor);
+        double speedMultiplier = driftObject.getSpeedMultiplier();
+        double speedModifier = driftObject.getSpeedModifier();
+        double divergenceAngle = driftObject.getDivergenceAngle();
+        double leeway = 0;
+
+        // VALIDATE USER INPUT:
+        // Wind direction is a spinner so there is no invalid value possible.
+        // Wind angle has 180 degrees either added to or subtracted from it to make it the angle the wind is blowing 'to' rather than blowing 'from'
+        switch (windDirection) {
+            case "N":
+                windVectorAngle = 0 + 180;
+                break;
+            case "NNE":
+                windVectorAngle = 22.5 + 180;
+                break;
+            case "NE":
+                windVectorAngle = 45 + 180;
+                break;
+            case "ENE":
+                windVectorAngle = 67.5 + 180;
+                break;
+            case "E":
+                windVectorAngle = 90 + 180;
+                break;
+            case "ESE":
+                windVectorAngle = 112.5 + 180;
+                break;
+            case "SE":
+                windVectorAngle = 135 + 180;
+                break;
+            case "SSE":
+                windVectorAngle = 157.5 + 180;
+                break;
+            case "S":
+                windVectorAngle = 180 + 180;
+                break;
+            case "SSW":
+                windVectorAngle = 202.5 - 180;
+                break;
+            case "SW":
+                windVectorAngle = 225 - 180;
+                break;
+            case "WSW":
+                windVectorAngle = 247.5 - 180;
+                break;
+            case "W":
+                windVectorAngle = 270 - 180;
+                break;
+            case "WNW":
+                windVectorAngle = 292.5 - 180;
+                break;
+            case "NW":
+                windVectorAngle = 315 - 180;
+                break;
+            case "NNW":
+                windVectorAngle = 337.5 - 180;
+                break;
+        }// End switch
+
+
+        try {
+            windSpeed = Double.parseDouble(ET_windSpeed.getText().toString());
+            leeway = ((windSpeed * speedMultiplier) + speedModifier);
+        } catch (NumberFormatException e) {
+            Log.w(TAG, "Wind speed value is invalid");
+        }
+        try {
+            currentSpeed = Double.parseDouble(ET_currentSpeed.getText().toString());
+        }
+        catch (NumberFormatException e) {
+            Log.w(TAG, "Current speed value is invalid");
+        }
+        try {
+            currentVectorAngle = Double.parseDouble(ET_currentDirection.getText().toString());
+        }
+        catch (NumberFormatException e) {
+            Log.w(TAG, "Current direction value is invalid");
+        }
+        try {
+            /* Formula to convert elapsed time to decimal hours:
+             * decimalHours = (hours) + (minutes / 60)
+             * e.g. (1 hour 45 minutes) = 1 + (45/60)
+             */
+            decimalHours = Double.parseDouble(ET_elapsedTimeHrs.getText().toString()) + ((Double.parseDouble(ET_elapsedTimeMins.getText().toString()) / 60));
+        }
+        catch (NumberFormatException e) {
+            Log.w(TAG, "Elapsed time value is invalid");
+        }
+        if(windSpeed == -1) {
+            Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.please_enter_a_wind_speed), Toast.LENGTH_LONG);
+            toast.show();
+        }
+        else if(currentSpeed == -1) {
+            Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.please_enter_current_speed), Toast.LENGTH_LONG);
+            toast.show();
+        }
+        else if(currentVectorAngle == -1) {
+            Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.please_enter_current_direction), Toast.LENGTH_LONG);
+            toast.show();
+        }
+        else if(decimalHours == -1) {
+            Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.please_enter_elapsed_time), Toast.LENGTH_LONG);
+            toast.show();
+        }
+        else {
+            // If it gets to here it has passed validation so a total drift vector is calculated and composed into a string...
+
+            // CALCULATIONS:
+            // Set magnitude and angle for each of the two vectors
+            double windVectorMagnitude = (leeway) * decimalHours;
+            windVectorAngle = windVectorAngle;
+
+            double currentVectorMagnitude = currentSpeed * decimalHours;
+            currentVectorAngle = currentVectorAngle;
+
+            // Convert to cartesian points
+            double windVector_X = windVectorMagnitude * Math.cos(windVectorAngle * Math.PI/180);
+            double currentVector_X = currentVectorMagnitude * Math.cos(currentVectorAngle * Math.PI/180);
+            double windVector_Y = windVectorMagnitude * Math.sin(windVectorAngle * Math.PI/180);
+            double currentVector_Y = currentVectorMagnitude * Math.sin(currentVectorAngle * Math.PI/180);
+
+            // Add components together to find the sum of the vectors in cartesian form
+            double totalVector_X = windVector_X + currentVector_X;
+            double totalVector_Y = windVector_Y + currentVector_Y;
+
+            // Convert the resultant vector back to polar form. This is the Total Drift Vector (TDV)
+            double TDV_Magnitude = Math.sqrt(Math.pow(totalVector_X, 2) + Math.pow(totalVector_Y, 2));
+            double TDV_Angle = Math.atan2(totalVector_Y, totalVector_X);
+            TDV_Angle = TDV_Angle * (180/Math.PI);
+
+            // Deal with negative values
+            if(TDV_Angle < 0) {
+                TDV_Angle = TDV_Angle + 360;
+            }
+
+            // Calculate the size of the search area (Radius (in nautical miles) with it's centre point at the end of the TDV)
+            double searchArea = 0;
+            // if the total drift vector is less than 8 nautical miles then the search area is a circle with a radius of 6 nautical miles.
+            if(TDV_Magnitude < 8) {
+                searchArea = 6;
+            }
+            // if the total drift vector is greater than 8 nautical miles then the search area is a circle with a radius of: (TDV_magnitude/8) + 6 nautical miles.
+            else {
+                searchArea = (TDV_Magnitude/8) + 6;
+            }
+
+            // Generate strings that will be displayed in a dialog box with the Display Total Drift Vector (TDV) and the input factors that were used to calculate it.
+            // TDV_Magnitude = Math.round(TDV_Magnitude);
+            DecimalFormat formatter = new DecimalFormat("#.##");
+            String formattedTDVMagnitude = formatter.format(TDV_Magnitude);
+            String formattedTDVAngle = formatter.format(TDV_Angle);
+            String formattedLeeway = formatter.format(leeway);
+            String formattedSearchArea = formatter.format(searchArea);
+
+            String driftObjectCharacteristics;
+            if(primaryDescriptor.contentEquals("N/A")) {
+                driftObjectCharacteristics = category + ", " + subCategory;
+            }
+            else if(secondaryDescriptor.contentEquals("N/A")) {
+                driftObjectCharacteristics = category + ", " + subCategory + ", " + primaryDescriptor;
+            }
+            else {
+                driftObjectCharacteristics = category + ", " + subCategory + ", " + primaryDescriptor + ", " + secondaryDescriptor;
+            }
+
+            String elapsedTimeHrs = ET_elapsedTimeHrs.getText().toString();
+            String elapsedTimeMins = ET_elapsedTimeMins.getText().toString();
+
+            // Display the dialog box
+            dialogBoxDisplayDriftVector(formattedTDVMagnitude, formattedTDVAngle, String.valueOf(divergenceAngle), formattedSearchArea, driftObjectCharacteristics, String.valueOf(windSpeed),
+                    windDirection, String.valueOf(currentSpeed), String.valueOf(currentVectorAngle), formattedLeeway, elapsedTimeHrs, elapsedTimeMins);
+
+            return formattedTDVMagnitude + "" + formattedTDVAngle + "" + formattedSearchArea + "" + String.valueOf(divergenceAngle);
+        }
+        return "failed to validate";
+    }
 
     // Deal with Spinner selections
     @Override
