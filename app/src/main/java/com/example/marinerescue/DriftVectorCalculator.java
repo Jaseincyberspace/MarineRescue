@@ -1,5 +1,7 @@
 package com.example.marinerescue;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -25,9 +27,14 @@ import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
+/** DATABASE NO LONGER IN USE
 import static com.example.marinerescue.MainActivity.driftObjectLeewayDatabase;
+*/
 
 public class DriftVectorCalculator extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -58,8 +65,10 @@ public class DriftVectorCalculator extends AppCompatActivity implements AdapterV
         final Spinner SP_secondaryDescription = (Spinner) findViewById(R.id.SP_secondaryDescription);
         Button B_calculateDriftVector = findViewById(R.id.B_calculateDriftVector);
 
+        /** DATABASE NO LONGER IN USE
         // Generate a list of driftObjects from the database
         final List<DriftObjectLeeway> DriftObjects = MainActivity.driftObjectLeewayDatabase.driftObjectLeewayDao().getAllDriftObjects();
+        */
 
         // SPINNER HANDLER - Deals with the windDirection spinner and the categories spinner, the subsequent ones are dealt with in the onItemSelected method
         // windDirection Spinner click listener
@@ -94,6 +103,7 @@ public class DriftVectorCalculator extends AppCompatActivity implements AdapterV
         // categories Spinner click listener
         SP_category.setOnItemSelectedListener(this);
 
+        /** DATABASE NO LONGER IN USE - This code has been re-written in the block below
         // Generate dropdown list elements
         List<String> categories = new ArrayList<String>();
         for(DriftObjectLeeway driftObject : DriftObjects) {
@@ -101,6 +111,17 @@ public class DriftVectorCalculator extends AppCompatActivity implements AdapterV
                 categories.add(driftObject.getCategory());
             }
         }
+
+        */
+        // Generate dropdown list elements
+        List<String> categories = new ArrayList<String>();
+        for(DriftObject driftObject : MainActivity.driftObjects) {
+            if(!categories.contains(driftObject.getCategory())) {
+                categories.add(driftObject.getCategory());
+            }
+        }
+        // End of database-replacing code block
+
         // Create spinner adapter
         ArrayAdapter<String> categoriesAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
         // Dropdown layout style (There are different spinner styles you can choose from, or you can create your own custom dropdown layout)
@@ -185,8 +206,22 @@ public class DriftVectorCalculator extends AppCompatActivity implements AdapterV
         double currentVectorAngle = -1;
         double decimalHours = -1;
 
-        // Set vars for the type of drift object selected by the user. (Defaults to 'Person In Water)
+        // Set vars for the type of drift object selected by the user. (Defaults to 'Person In Water')
+        /** DATABASE NO LONGER IN USE. This line has been re-written in the code block below this comment
         DriftObjectLeeway driftObject = driftObjectLeewayDatabase.driftObjectLeewayDao().getDriftObjectLeeway(category, subCategory, primaryDescriptor, secondaryDescriptor);
+         */
+        DriftObject driftObject = new DriftObject("Person in water", "Float position Unknown", "", "",0.011,0.07,30);
+        for (DriftObject driftItem : MainActivity.driftObjects) {
+            if(driftItem.Category.equals(category) && driftItem.SubCategory.equals(subCategory) && driftItem.PrimaryDescriptor.equals(primaryDescriptor) && driftItem.SecondaryDescriptor.equals(secondaryDescriptor)) {
+                driftObject = driftItem;
+            }
+            else {
+                Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_drift_object_found), Toast.LENGTH_LONG);
+                toast.show();
+            }
+        }
+        // End of database-replacing code block
+
         double speedMultiplier = driftObject.getSpeedMultiplier();
         double speedModifier = driftObject.getSpeedModifier();
         double divergenceAngle = driftObject.getDivergenceAngle();
@@ -390,8 +425,10 @@ public class DriftVectorCalculator extends AppCompatActivity implements AdapterV
         windDirections.add("NW");
         windDirections.add("NNW");
 
+        /** DATABASE NO LONGER IN USE. This code has been re-written in the code block below this comment
         // Generate a list of driftObjects from the database
         List<DriftObjectLeeway> DriftObjects = MainActivity.driftObjectLeewayDatabase.driftObjectLeewayDao().getAllDriftObjects();
+
         // Generate a list of categories
         List<String> categoriesList = new ArrayList<String>();
         for(DriftObjectLeeway driftObject : DriftObjects) {
@@ -414,6 +451,32 @@ public class DriftVectorCalculator extends AppCompatActivity implements AdapterV
         for(DriftObjectLeeway driftObject : DriftObjects) {
             secondaryDescriptionsList.add(driftObject.getSecondaryDescriptor());
         }
+         */
+        // Generate a list of categories
+        List<String> categoriesList = new ArrayList<String>();
+        for(DriftObject driftObject : MainActivity.driftObjects) {
+            if(!categoriesList.contains(driftObject.getCategory())) {
+                categoriesList.add(driftObject.getCategory());
+            }
+        }
+        // Generate a list of sub-categories
+        List<String> subCategoriesList = new ArrayList<String>();
+        for(DriftObject driftObject : MainActivity.driftObjects) {
+            subCategoriesList.add(driftObject.getSubCategory());
+        }
+
+        // Generate a list of descriptions
+        List<String> descriptionsList = new ArrayList<String>();
+        for(DriftObject driftObject : MainActivity.driftObjects) {
+            descriptionsList.add(driftObject.getPrimaryDescriptor());
+        }
+
+        // Generate a list of secondary descriptions
+        List<String> secondaryDescriptionsList = new ArrayList<String>();
+        for(DriftObject driftObject : MainActivity.driftObjects) {
+            secondaryDescriptionsList.add(driftObject.getSecondaryDescriptor());
+        }
+        // End database-replacing code block
 
         // If the spinner item selected relates to windDirection then save the selection
         if(item.contentEquals("N") || item.contentEquals("NNE") || item.contentEquals("NE") || item.contentEquals("ENE") || item.contentEquals("E") || item.contentEquals("ESE")
@@ -438,9 +501,21 @@ public class DriftVectorCalculator extends AppCompatActivity implements AdapterV
             // Spinner click listener
             SP_subCategory.setOnItemSelectedListener(this);
 
+            /** DATABASE NO LONGER IN USE. This code has been re-written in the code block below this comment
             // Generate a list of driftObjects within the selected item category from the database
             List<DriftObjectLeeway> DriftObjectsInCategory = driftObjectLeewayDatabase.driftObjectLeewayDao().getObjectsInCategory(item);
+            */
+            // Generate a list of driftObjects within the selected item category
+            List<DriftObject> DriftObjectsInCategory = new ArrayList<DriftObject>();
+            for(DriftObject driftObject : MainActivity.driftObjects) {
+                String selectedCategory = driftObject.getCategory();
+                if(selectedCategory.equals(item)) {
+                    DriftObjectsInCategory.add(driftObject);
+                }
+            }
+            // End database-replacing code block
 
+            /** DATABASE NO LONGER IN USE. This code has been re-written in the code block below this comment
             // Generate dropdown list elements
             List<String> subCategories = new ArrayList<String>();
             for(DriftObjectLeeway driftObject : DriftObjectsInCategory) {
@@ -448,6 +523,15 @@ public class DriftVectorCalculator extends AppCompatActivity implements AdapterV
                     subCategories.add(driftObject.getSubCategory());
                 }
             }
+            */
+            // Generate dropdown list elements
+            List<String> subCategories = new ArrayList<String>();
+            for(DriftObject driftObject : DriftObjectsInCategory) {
+                if(!subCategories.contains(driftObject.getSubCategory())) {
+                    subCategories.add(driftObject.getSubCategory());
+                }
+            }
+            // End database-replacing code block
 
             // Create spinner adapter
             ArrayAdapter<String> subCategoriesAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, subCategories);
@@ -468,9 +552,20 @@ public class DriftVectorCalculator extends AppCompatActivity implements AdapterV
             // Spinner click listener
             SP_description.setOnItemSelectedListener(this);
 
+            /** DATABASE NO LONGER IN USE. This code has been re-written in the code block below this comment
             // Generate a list of driftObjects within the selected item sub-category from the database
             List<DriftObjectLeeway> DriftObjectsInSubCategory = driftObjectLeewayDatabase.driftObjectLeewayDao().getObjectsInSubCategory(item);
+            */
+            // Generate a list of driftObjects within the selected item sub-category
+            List<DriftObject> DriftObjectsInSubCategory = new ArrayList<DriftObject>();
+            for(DriftObject driftObject : MainActivity.driftObjects) {
+                if(driftObject.getSubCategory().equals(item)) {
+                    DriftObjectsInSubCategory.add(driftObject);
+                }
+            }
+            // End database-replacing code block
 
+            /** DATABASE NO LONGER IN USE. This code has been re-written in the code block below this comment
             // Generate dropdown list elements
             List<String> descriptions = new ArrayList<String>();
             for(DriftObjectLeeway driftObject : DriftObjectsInSubCategory) {
@@ -478,6 +573,15 @@ public class DriftVectorCalculator extends AppCompatActivity implements AdapterV
                     descriptions.add(driftObject.getPrimaryDescriptor());
                 }
             }
+            */
+            // Generate dropdown list elements
+            List<String> descriptions = new ArrayList<String>();
+            for(DriftObject driftObject : DriftObjectsInSubCategory) {
+                if(!descriptions.contains(driftObject.PrimaryDescriptor)) {
+                    descriptions.add(driftObject.getPrimaryDescriptor());
+                }
+            }
+            // End database-replacing code block
 
             // Create spinner adapter
             ArrayAdapter<String> descriptionsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, descriptions);
@@ -501,9 +605,20 @@ public class DriftVectorCalculator extends AppCompatActivity implements AdapterV
             // Spinner click listener
             SP_secondaryDescription.setOnItemSelectedListener(this);
 
+            /** DATABASE NO LONGER IN USE. This code has been re-written in the code block below this comment
             // Generate a list of driftObjects from the database within the selected item description field
             List<DriftObjectLeeway> DriftObjectsWithDescription = driftObjectLeewayDatabase.driftObjectLeewayDao().getObjectsWithDescription(item);
+            */
+            // Generate a list of driftObjects within the selected item description field
+            List<DriftObject> DriftObjectsWithDescription = new ArrayList<DriftObject>();
+            for(DriftObject driftObject : MainActivity.driftObjects) {
+                if(driftObject.getPrimaryDescriptor().equals(item)) {
+                    DriftObjectsWithDescription.add(driftObject);
+                }
+            }
+            // End database-replacing code block
 
+            /** DATABASE NO LONGER IN USE. This code has been re-written in the code block below this comment
             // Generate dropdown list elements
             List<String> secondaryDescriptions = new ArrayList<String>();
             for(DriftObjectLeeway driftObject : DriftObjectsWithDescription) {
@@ -511,6 +626,15 @@ public class DriftVectorCalculator extends AppCompatActivity implements AdapterV
                     secondaryDescriptions.add(driftObject.getSecondaryDescriptor());
                 }
             }
+            */
+            // Generate dropdown list elements
+            List<String> secondaryDescriptions = new ArrayList<String>();
+            for(DriftObject driftObject : DriftObjectsWithDescription) {
+                if(!secondaryDescriptions.contains(driftObject.SecondaryDescriptor)) {
+                    secondaryDescriptions.add(driftObject.getSecondaryDescriptor());
+                }
+            }
+            // End database-replacing code block
 
             // Create spinner adapter
             ArrayAdapter<String> secondaryDescriptionsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, secondaryDescriptions);

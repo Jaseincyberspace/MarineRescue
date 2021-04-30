@@ -26,8 +26,12 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
+    /** DATABASE NO LONGER IN USE
     // Instantiate Leeway database
     public static DriftObjectLeewayDatabase driftObjectLeewayDatabase;
+     */
+
+    // Instantiate ArrayList to hold drift objects
     public static ArrayList<DriftObject> driftObjects = new ArrayList<>();
 
     @Override
@@ -40,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setLogo(R.mipmap.ic_launcher);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
+        /** DATABASE NO LONGER IN USE. THIS CODE BLOCK IS NO LONGER REQUIRED
         // Construct the Leeway database.
         Migration migration_1_2 = new Migration(1,2) {
             @Override
@@ -49,14 +54,17 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        // TODO: Learn how to deal with multiple threads and change this so that the database does not run on the main thread
         driftObjectLeewayDatabase = Room.databaseBuilder(getApplicationContext(), DriftObjectLeewayDatabase.class, "DriftObjectLeewayDB").allowMainThreadQueries().addMigrations(migration_1_2).fallbackToDestructiveMigration().build();
 
         // Clear any old objects from the database
         // driftObjectLeewayDatabase.driftObjectLeewayDao().deleteAllDriftObjects();
 
         // Get drift object leeway data from .csv file and create driftObjects in DriftObjectLeeway database.
-        getDriftObjects();
+        if(driftObjectLeewayDatabase.driftObjectLeewayDao().getAllDriftObjects().size() < 1) {
+            getDriftObjects();
+        }
+
+         */
 
         // Create a list of drift objects from .csv file
         generateDriftObjects();
@@ -87,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
     } // End onCreate method
 
+    /** DATABASE NO LONGER IN USE
     private void getDriftObjects() {
 
         InputStream inputStream = getResources().openRawResource(R.raw.leeway_table);
@@ -123,6 +132,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+     */
+
+    // Read drift objects from csv and add them into the driftObjects arrayList
     private void generateDriftObjects() {
 
         InputStream inputStream = getResources().openRawResource(R.raw.leeway_table);
@@ -140,7 +152,6 @@ public class MainActivity extends AppCompatActivity {
                 // Read the data on each line
                 DriftObject driftObject = new DriftObject(columns[0], columns[1], columns[2], columns[3], Double.parseDouble(columns[4]), Double.parseDouble(columns[5]), Double.parseDouble(columns[6]));
                 driftObjects.add(driftObject);
-
             }
         }
         catch (Exception e) {
